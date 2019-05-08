@@ -16,11 +16,7 @@ export default class Chat extends Component {
     super(props)
     this.chatArea = ""
     this.state = {
-      messagesList: [
-        {user: "pepe",
-      message: "hola",
-      timeStamp: "-"}
-      ],
+      messagesList: [],
       message: ""
     }
   }
