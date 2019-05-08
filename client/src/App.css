@@ -1,0 +1,45 @@
+.App{
+  background-color: #209cee;
+  height: 100vh;
+
+}
+
+.hero-section{
+  height: 100vh;
+}
+
+.App .chat-container {
+  margin-top: 20px;
+}
+
+.users-list{
+  color: #fff;
+}
+
+.users-list .title{
+  color: #fff;
+}
+
+.chat-area{
+  height: 80vh;
+  overflow-y: scroll;
+}
+
+.text-form{
+  height: 10vh;
+}
+
+.App .users-list ul, .App .chat-area ul{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.current-user{
+  font-weight: bolder;
+}
+
+.current-user-message{
+  color: hsl(171, 100%, 41%);
+  font-weight: bolder;
+}
