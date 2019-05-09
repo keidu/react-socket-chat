@@ -15,10 +15,10 @@ import io from 'socket.io-client';
 
 
 export default class Chat extends Component {
-  constructor(props){
-    
+  constructor(props) {
+
     super(props)
-    this.chatArea = ""
+    this.chatAreaDOMEl = undefined
     this.state = {
       messagesList: [],
       message: ""
@@ -28,9 +28,9 @@ export default class Chat extends Component {
     this.socket = io("http://192.168.20.51:5000")
   }
 
-  submitMessage(e){
+  submitMessage(e) {
     e.preventDefault()
-    if(this.state.message.trim() !== ""){
+    if(this.state.message.trim() === "") return
 
       const today = new Date();
       const timeStamp = today.getHours() + ":" + today.getMinutes();
@@ -52,17 +52,17 @@ export default class Chat extends Component {
       messagesList: messages,
       message: ""
     })
-    }
     
-
   }
 
-  handleChange(e){
-    this.setState({message: e.target.value})
+  handleChange(e) {
+    this.setState({ 
+      ...this.state,
+      message: e.target.value })
   }
 
-  componentDidMount(){
-    this.chatArea = document.querySelector(".chat-area")
+  componentDidMount() {
+    this.chatAreaDOMEl = document.querySelector(".chat-area")
 
     /** 4. listen to new messages and add them to state **/
     this.socket.on("newMessage", message =>{
@@ -76,66 +76,65 @@ export default class Chat extends Component {
 
   }
 
-  componentDidUpdate(){
-    this.chatArea.scrollTop = this.chatArea.scrollHeight;
-
+  componentDidUpdate() {
+    this.chatAreaDOMEl.scrollTop = this.chatAreaDOMEl.scrollHeight;
   }
 
 
   render() {
-    const {users, userName} = this.props
-    
+    const { users, userName } = this.props
 
-    if(!userName){
+
+    if (!userName) {
       this.props.history.push("/")
 
     }
 
     return (
-      <Container  className="chat-container is-fluid">
-      <Content>
-      <Columns isSize="1/4">
-        <Column className="users-list">
-        <h2 className="title">Users list</h2>
-        <ul>
-          {users.map((user, idx) => {
-            return user===userName?
-            <li key={idx} className="current-user">{user}</li>:
-            <li key={idx}>{user}</li>
-          })}
-        </ul>
-        </Column>
-        <Column  isSize="3/4">
-        <Box className="chat-area">
-        <ul>
-          {this.state.messagesList.map((message, idx) =>{
-            return message.user===userName?
-          <li key={idx} className="current-user-message">[{message.timeStamp}] {message.user}: {message.message} </li>:
-          <li key={idx}>[{message.timeStamp}] {message.user}: {message.message} </li>
-          })}
-        </ul>
-        </Box>
-        <form className="text-form" onSubmit={(e) => this.submitMessage(e)}>
-          <Field isGrouped>
-          <Input
-            onChange={e => this.handleChange(e)}
-            type="text" 
-            placeholder="write a message..."
-            value={this.state.message}/>
-          <Control>
-            <Button 
-              isColor="danger"
-              onClick={(e) => this.submitMessage(e)}>
-              Send
+      <Container className="chat-container is-fluid">
+        <Content>
+          <Columns isSize="1/4">
+            <Column className="users-list">
+              <h2 className="title">Users list</h2>
+              <ul>
+                {users.map((user, idx) => {
+                  return user === userName ?
+                    <li key={idx} className="current-user">{user}</li> :
+                    <li key={idx}>{user}</li>
+                })}
+              </ul>
+            </Column>
+            <Column isSize="3/4">
+              <Box className="chat-area">
+                <ul>
+                  {this.state.messagesList.map((message, idx) => {
+                    return message.user === userName ?
+                      <li key={idx} className="current-user-message">[{message.timeStamp}] {message.user}: {message.message} </li> :
+                      <li key={idx}>[{message.timeStamp}] {message.user}: {message.message} </li>
+                  })}
+                </ul>
+              </Box>
+              <form className="text-form" onSubmit={(e) => this.submitMessage(e)}>
+                <Field isGrouped>
+                  <Input
+                    onChange={e => this.handleChange(e)}
+                    type="text"
+                    placeholder="write a message..."
+                    value={this.state.message} />
+                  <Control>
+                    <Button
+                      isColor="danger"
+                      onClick={(e) => this.submitMessage(e)}>
+                      Send
             </Button>
-          </Control>
-          
-          </Field>
-        </form>
-        </Column>
-      </Columns>
+                  </Control>
 
-      </Content>
+                </Field>
+              </form>
+            </Column>
+          </Columns>
+
+        </Content>
       </Container>
     )
   }

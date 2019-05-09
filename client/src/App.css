@@ -1,6 +1,6 @@
 .App{
   background-color: #209cee;
-  height: 100vh;
+  min-height: 100vh;
 
 }
 
@@ -9,7 +9,7 @@
 }
 
 .App .chat-container {
-  margin-top: 20px;
+  padding: 20px;
 }
 
 .users-list{

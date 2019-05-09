@@ -32,8 +32,8 @@ class App extends Component {
       ...this.state,
       userlist: newList,
       username: user
-    })
-    this.props.history.push("/chat")
+    }, ()=>{this.props.history.push("/chat") })
+    
   }
 
   componentDidMount(){
