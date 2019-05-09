@@ -10,6 +10,9 @@ import { Control } from 'bloomer/lib/elements/Form/Control';
 import { Button } from 'bloomer/lib/elements/Button';
 import { Field } from 'bloomer/lib/elements/Form/Field/Field';
 
+import io from 'socket.io-client';
+
+
 export default class Chat extends Component {
   constructor(props){
     
@@ -19,19 +22,27 @@ export default class Chat extends Component {
       messagesList: [],
       message: ""
     }
+
+    this.socket = io("http://192.168.20.51:5000")
   }
 
   submitMessage(e){
     e.preventDefault()
     if(this.state.message.trim() !== ""){
+
       const today = new Date();
       const timeStamp = today.getHours() + ":" + today.getMinutes();
       const messages = [...this.state.messagesList]
-      messages.push({
-      user: this.props.userName,
-      message: this.state.message,
-      timeStamp
-    })
+
+      const message ={
+        user: this.props.userName,
+        message: this.state.message,
+        timeStamp
+      }
+
+      this.socket.emit("messageSent", message)
+
+      messages.push(message)
 
     this.setState({
       ...this.state,
@@ -50,10 +61,20 @@ export default class Chat extends Component {
   componentDidMount(){
     this.chatArea = document.querySelector(".chat-area")
 
+    this.socket.on("newMessage", message =>{
+      const messages = [...this.state.messagesList]
+      messages.push(message)
+      this.setState({
+        ...this.state,
+        messagesList: messages
+      })
+    })
+
   }
 
   componentDidUpdate(){
     this.chatArea.scrollTop = this.chatArea.scrollHeight;
+
   }
 
 
