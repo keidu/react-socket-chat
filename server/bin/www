@@ -23,6 +23,24 @@ app.use((err, req, res, next) => {
 
 let server = http.createServer(app);
 
+/*****************************************
+ *********** ADDING WEBSOCKETS ***********
+ *****************************************/
+
+ const io = require('socket.io').listen(server);
+
+ io.on("connection", socket => {
+   socket.on("userConnect", user =>{
+    console.log(`${user} connected`)
+    socket.broadcast.emit("newUser", user)
+    })
+    
+   socket.on("messageSent", message =>{
+     console.log(message)
+    socket.broadcast.emit("newMessage", message)
+   }) 
+ })
+
 server.on('error', error => {
   if (error.syscall !== 'listen') { throw error }
 
