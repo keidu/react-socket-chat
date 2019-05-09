@@ -41,6 +41,9 @@ let server = http.createServer(app);
    }) 
  })
 
+ /*****************************************/
+
+ 
 server.on('error', error => {
   if (error.syscall !== 'listen') { throw error }
 
@@ -60,7 +63,6 @@ server.on('error', error => {
 });
 
 
-/*****************************************/
 
 server.listen(process.env.PORT, () => {
   console.log(`Listening on http://localhost:${process.env.PORT}`);

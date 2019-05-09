@@ -6,6 +6,7 @@ import InputName from './components/InputName';
 import 'bulma/css/bulma.css'
 import Chat from './components/Chat';
 
+/** 1. import socket client **/
 import io from 'socket.io-client';
 
 
@@ -16,12 +17,16 @@ class App extends Component {
       userlist:[],
       username: null,
     }
+
+    /** 2. connect to server **/
     this.socket = io("http://192.168.20.51:5000")
   }
 
   newUser(user){
     const newList = [...this.state.userlist]
     newList.push(user)
+
+    /** 3. send event to server **/
     this.socket.emit("userConnect", user)
     this.setState({
       ...this.state,
@@ -32,6 +37,8 @@ class App extends Component {
   }
 
   componentDidMount(){
+
+    /** 4. listen to new messages and add them to state **/
     this.socket.on("newUser", user =>{
       const newList = [...this.state.userlist]
       newList.push(user)

@@ -10,6 +10,7 @@ import { Control } from 'bloomer/lib/elements/Form/Control';
 import { Button } from 'bloomer/lib/elements/Button';
 import { Field } from 'bloomer/lib/elements/Form/Field/Field';
 
+/** 1. import socket client **/
 import io from 'socket.io-client';
 
 
@@ -23,6 +24,7 @@ export default class Chat extends Component {
       message: ""
     }
 
+    /** 2. connect to server **/
     this.socket = io("http://192.168.20.51:5000")
   }
 
@@ -40,6 +42,7 @@ export default class Chat extends Component {
         timeStamp
       }
 
+      /** 3. send event to server **/
       this.socket.emit("messageSent", message)
 
       messages.push(message)
@@ -61,6 +64,7 @@ export default class Chat extends Component {
   componentDidMount(){
     this.chatArea = document.querySelector(".chat-area")
 
+    /** 4. listen to new messages and add them to state **/
     this.socket.on("newMessage", message =>{
       const messages = [...this.state.messagesList]
       messages.push(message)
