@@ -28,6 +28,7 @@ class App extends Component {
 
     /** 3. send event to server **/
     this.socket.emit("userConnect", user)
+    
     this.setState({
       ...this.state,
       userlist: newList,
