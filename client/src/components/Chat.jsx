@@ -25,7 +25,7 @@ export default class Chat extends Component {
     }
 
     /** 2. connect to server **/
-    this.socket = io("http://192.168.20.51:5000")
+    this.socket = io("http://192.168.20.37:5000")
   }
 
   submitMessage(e) {
@@ -73,6 +73,8 @@ export default class Chat extends Component {
         messagesList: messages
       })
     })
+
+    
 
   }
 

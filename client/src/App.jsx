@@ -19,13 +19,12 @@ class App extends Component {
     }
 
     /** 2. connect to server **/
-    this.socket = io("http://192.168.20.51:5000")
+    this.socket = io("http://192.168.20.37:5000")
   }
 
   newUser(user){
     const newList = [...this.state.userlist]
     newList.push(user)
-
     /** 3. send event to server **/
     this.socket.emit("userConnect", user)
     
@@ -40,15 +39,18 @@ class App extends Component {
   componentDidMount(){
 
     /** 4. listen to new messages and add them to state **/
-    this.socket.on("newUser", user =>{
-      const newList = [...this.state.userlist]
-      newList.push(user)
+    this.socket.on("newUser", userList =>{
+      console.log(userList)
+      let newList = [...this.state.userlist]
+      newList = userList
       this.setState({
         ...this.state,
         userlist: newList,
       })
     })
   }
+
+  
 
   render(){
   

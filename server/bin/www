@@ -29,10 +29,15 @@ let server = http.createServer(app);
 
  const io = require('socket.io').listen(server);
 
+ let userList = []
+
  io.on("connection", socket => {
+
+  
    socket.on("userConnect", user =>{
     console.log(`${user} connected`)
-    socket.broadcast.emit("newUser", user)
+    userList.push(user)
+    socket.broadcast.emit("newUser", userList)
     })
     
    socket.on("messageSent", message =>{
