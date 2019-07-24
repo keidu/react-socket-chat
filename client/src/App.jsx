@@ -36,24 +36,28 @@ class App extends Component {
     
   }
 
-  componentDidMount(){
-
-    /** 4. listen to new messages and add them to state **/
-    this.socket.on("newUser", userList =>{
-      console.log(userList)
-      let newList = [...this.state.userlist]
-      newList = userList
-      this.setState({
-        ...this.state,
-        userlist: newList,
-      })
+  getList(userList){
+    this.setState({
+      ...this.state,
+      userlist: userList
     })
   }
+
+  // componentDidMount(){
+
+  //   /** 4. listen to new messages and add them to state **/
+  //   this.socket.on("newUser", userList =>{
+  //     this.setState({
+  //       ...this.state,
+  //       userlist: userList
+  //     })
+  //   })
+  // }
 
   
 
   render(){
-  
+    console.log(this.state)
     return (
       <div className="App">
         <Switch>
@@ -63,7 +67,7 @@ class App extends Component {
             />
           <Route
             exact path="/chat"
-            render={props => <Chat {...props} users={this.state.userlist} userName={this.state.username}/>}
+            render={props => <Chat {...props} users={this.state.userlist} userName={this.state.username} list={(userList)=>{this.getList(userList)}}/>}
             />
         </Switch>
       </div>

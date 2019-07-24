@@ -74,9 +74,11 @@ export default class Chat extends Component {
       })
     })
 
-    
-
+    this.socket.on("newUser", userList =>{
+      this.props.list(userList)
+    })
   }
+
 
   componentDidUpdate() {
     this.chatAreaDOMEl.scrollTop = this.chatAreaDOMEl.scrollHeight;
