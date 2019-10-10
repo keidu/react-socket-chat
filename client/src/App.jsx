@@ -1,80 +1,69 @@
-import React, { Component } from 'react'
-import { Switch, Route, withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import { Switch, Route, withRouter } from "react-router-dom";
+import "./App.css";
+import InputName from "./components/InputName";
+import "bulma/css/bulma.css";
+import Chat from "./components/Chat";
 
-import './App.css';
-import InputName from './components/InputName';
-import 'bulma/css/bulma.css'
-import Chat from './components/Chat';
-
-/** 1. import socket client **/
-import io from 'socket.io-client';
-
+/** import socket client **/
+import io from "socket.io-client";
 
 class App extends Component {
-  constructor(props){
-    super(props)
+
+  constructor(props) {
+    super(props);
     this.state = {
-      userlist:[],
-      username: null,
+      userlist: [],
+      username: null
+    };
+
+    /** connect to server **/
+    this.socket = io("http://192.168.20.150:5000");
+
+    this.socket.on("updatedUserList", updatedUsersList => {
+      this.setState({ ...this.state, userlist: updatedUsersList })
+    });
+  }
+
+  createChatUser(user) {
+    if (user.trim() !== "") {
+      this.socket.emit("newConfirmedChatUser", user);
+      this.setState({...this.state, username: user})
+      this.props.history.push("/chat")    
     }
-
-    /** 2. connect to server **/
-    this.socket = io("http://192.168.20.37:5000")
   }
 
-  newUser(user){
-    const newList = [...this.state.userlist]
-    newList.push(user)
-    /** 3. send event to server **/
-    this.socket.emit("userConnect", user)
-    
-    this.setState({
-      ...this.state,
-      userlist: newList,
-      username: user
-    }, ()=>{this.props.history.push("/chat") })
-    
-  }
-
-  getList(userList){
-    this.setState({
-      ...this.state,
-      userlist: userList
-    })
-  }
-
-  // componentDidMount(){
-
-  //   /** 4. listen to new messages and add them to state **/
-  //   this.socket.on("newUser", userList =>{
-  //     this.setState({
-  //       ...this.state,
-  //       userlist: userList
-  //     })
-  //   })
-  // }
-
-  
-
-  render(){
-    console.log(this.state)
+  render() {
     return (
       <div className="App">
         <Switch>
           <Route
-            exact path="/"
-            render={props => <InputName {...props} newUser={(user) => this.newUser(user)}/>}
-            />
+            exact
+            path="/"
+            render={props => (
+              <InputName
+                {...props}
+                createChatUser={user => this.createChatUser(user)}
+              />
+            )}
+          />
           <Route
-            exact path="/chat"
-            render={props => <Chat {...props} users={this.state.userlist} userName={this.state.username} list={(userList)=>{this.getList(userList)}}/>}
-            />
+            exact
+            path="/chat"
+            render={props => (
+              <Chat
+                {...props}
+                update={this.updateList}
+                socket={this.socket}
+                users={this.state.userlist}
+                userName={this.state.username}
+              />
+            )}
+          />
         </Switch>
       </div>
     );
-
   }
 }
 
-export default withRouter(App)
-
+export default withRouter(App);
